@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Time to Bake</string>
+    <string name="title_recipes">Recipes</string>
+    <string name="title_discover">Discover</string>
+    <string name="title_favourites">Favourites</string>
+    <string name="title_shoppingList">Shopping</string>
+    <string name="title_community">Community</string>
+    <string name="edit_message">Enter a message</string>
+    <string name="button_send">Send</string>
+
+    <!--to toggle the open close button
+            of the navigation drawer-->
+    <string name="nav_open">Open</string>
+    <string name="nav_close">Close</string>
+</resources>

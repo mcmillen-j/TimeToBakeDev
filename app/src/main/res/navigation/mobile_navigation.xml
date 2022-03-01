@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_recipes">
+
+    <fragment
+        android:id="@+id/navigation_recipes"
+        android:name="com.example.testproject.ui.recipes.RecipesFragment"
+        android:label="Time to Bake"
+        tools:layout="@layout/fragment_recipes" />
+
+    <fragment
+        android:id="@+id/navigation_discover"
+        android:name="com.example.testproject.ui.discover.DiscoverFragment"
+        android:label="Time to Bake"
+        tools:layout="@layout/fragment_discover" />
+
+    <fragment
+        android:id="@+id/navigation_favourites"
+        android:name="com.example.testproject.ui.favourites.FavouritesFragment"
+        android:label="Time to Bake"
+        tools:layout="@layout/fragment_favourites" />
+
+    <fragment
+        android:id="@+id/navigation_shoppingList"
+        android:name="com.example.testproject.ui.shoppingList.ShoppingListFragment"
+        android:label="Time to Bake"
+        tools:layout="@layout/fragment_shopping_list" />
+
+    <fragment
+        android:id="@+id/navigation_community"
+        android:name="com.example.testproject.ui.community.CommunityFragment"
+        android:label="Time to Bake"
+        tools:layout="@layout/fragment_community" />
+
+    <fragment
+        android:id="@+id/navigation_conversionChart"
+        android:name="com.example.testproject.ui.conversionChart.ConversionChartFragment"
+        android:label="Time to Bake"
+        tools:layout="@layout/fragment_conversion_chart" />
+</navigation>
