@@ -1,6 +1,5 @@
 package com.example.testproject.ui.favourites;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,37 +7,33 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 
+import com.example.testproject.MainActivity;
+import com.example.testproject.R;
 import com.example.testproject.databinding.FragmentFavouritesBinding;
 
 public class FavouritesFragment extends Fragment {
 
-    private FavouritesViewModel favouritesViewModel;
     private FragmentFavouritesBinding binding;
 
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        favouritesViewModel =
-                new ViewModelProvider(this).get(FavouritesViewModel.class);
 
-        binding = FragmentFavouritesBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
+        View view = inflater.inflate(R.layout.fragment_favourites, container, false);
+        TextView recipeName = (TextView) view.findViewById(R.id.recipeNameFav);
+        TextView recipeTime = (TextView) view.findViewById(R.id.recipeTimeFav);
 
-        final TextView textView = binding.textFavourites;
-        favouritesViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
+        MainActivity activity = (MainActivity) getActivity();
+        String recipeNameLoaded = activity.getRecipeName();
+        String recipeTimeLoaded = activity.getRecipeTime();
 
-        Intent intent = new Intent(getActivity(), FavouritesActivity.class);
-        startActivity(intent);
-        return root;
+        recipeName.setText(recipeNameLoaded);
+        recipeTime.setText(recipeTimeLoaded);
+
+
+        return view;
     }
 
     @Override
@@ -47,3 +42,29 @@ public class FavouritesFragment extends Fragment {
         binding = null;
     }
 }
+//        if (favouriteValue.contentEquals("Yes")){
+//                setVariable("Yes");
+//                }
+//
+//
+//
+//                if (getVariable() == "Yes") {
+//
+//                TextView textView = findViewById(R.id.test);
+//                textView.setText(getVariable());
+//
+//                } else {
+//                Log.w(TAG, "Not a favourite");
+//
+//                }
+//
+//                }
+//public void setVariable(String s)
+//        {
+//        this.displayFavourite = s;
+//        }
+//
+//public String getVariable()
+//        {
+//        return displayFavourite;
+//        }

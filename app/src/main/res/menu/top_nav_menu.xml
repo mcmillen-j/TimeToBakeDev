@@ -6,4 +6,8 @@
         android:id="@+id/navigation_conversion"
         android:title="Conversion Chart"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/navigation_timer"
+        android:title="Timer"
+        app:showAsAction="never" />
 </menu>

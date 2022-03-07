@@ -6,13 +6,13 @@ import androidx.lifecycle.ViewModel;
 
 public class FavouritesViewModel extends ViewModel {
 
-    private MutableLiveData<String> mText;
+//    private MutableLiveData<String> mText;
 
-    public FavouritesViewModel() {
-        mText = new MutableLiveData<>();
-    }
+//    public FavouritesViewModel() {
+//        mText = new MutableLiveData<>();
+//    }
 
-    public LiveData<String> getText() {
-        return mText;
-    }
+//    public LiveData<String> getText() {
+//        return mText;
+//    }
 }
