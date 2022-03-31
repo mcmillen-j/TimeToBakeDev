@@ -6,9 +6,9 @@
     <string name="title_shoppingList">Shopping</string>
     <string name="title_community">Community</string>
 
-    <!--to toggle the open close button
-            of the navigation drawer-->
+    <!--to toggle the open close button of the navigation drawer-->
     <string name="nav_open">Open</string>
     <string name="nav_close">Close</string>
     <string name="title_activity_maps">MapsActivity</string>
+    <string name="conversion"><u>Convert your measurements here</u></string>
 </resources>

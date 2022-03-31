@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AccountActivity">
+
+    <EditText
+        android:id="@+id/setFirstName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="15dp"
+        android:background="@drawable/inputs"
+        android:drawableStart="@drawable/ic_baseline_account_box_24"
+        android:hint="First Name"
+        android:inputType="textMultiLine"
+        android:padding="6dp"
+        android:textAlignment="center"
+        android:textColor="@color/blue"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/setLastName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/setFirstName"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="15dp"
+        android:background="@drawable/inputs"
+        android:drawableStart="@drawable/ic_baseline_account_box_24"
+        android:hint="Last Name"
+        android:inputType="textMultiLine"
+        android:padding="6dp"
+        android:textAlignment="center"
+        android:textColor="@color/blue"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/setDOB"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/setLastName"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="15dp"
+        android:background="@drawable/inputs"
+        android:drawableStart="@drawable/ic_baseline_calendar_month_24"
+        android:hint="Date of Birth"
+        android:inputType="textMultiLine"
+        android:padding="6dp"
+        android:textAlignment="center"
+        android:textColor="@color/blue"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/updateAccountInfoButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/setDOB"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="15dp"
+        android:backgroundTint="@color/blue"
+        android:inputType="textMultiLine"
+        android:padding="6dp"
+        android:text="Update"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="@color/cream"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+</RelativeLayout>
