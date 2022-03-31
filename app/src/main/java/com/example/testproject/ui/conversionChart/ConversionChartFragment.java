@@ -27,13 +27,6 @@ public class ConversionChartFragment extends Fragment {
         binding = FragmentConversionChartBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textConversionChart;
-        conversionChartViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
         return root;
     }
 
