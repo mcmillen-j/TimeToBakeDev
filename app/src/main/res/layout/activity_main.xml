@@ -13,12 +13,17 @@
     app:itemIconTint="@color/blue" >
 
 
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent">-->
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="?attr/actionBarSize" >
 
+        android:paddingTop="?attr/actionBarSize">
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav_view"
@@ -84,6 +89,8 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+
+<!--    </LinearLayout>-->
 
 <!--    <com.google.android.material.navigation.NavigationView-->
 <!--        android:layout_width="wrap_content"-->

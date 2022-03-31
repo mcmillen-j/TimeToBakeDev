@@ -2,7 +2,9 @@ package com.example.testproject;
 
 import android.Manifest;
 import android.content.Intent;
+
 import android.content.res.ColorStateList;
+
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -12,9 +14,13 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+
 import com.example.testproject.databinding.ActivityMainBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+
+import com.example.testproject.ui.favourites.FavouritesFragment;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.NonNull;
@@ -55,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
     public DrawerLayout drawerLayout;
     public ActionBarDrawerToggle actionBarDrawerToggle;
 
+
     private Menu menu;
 
     private FirebaseUser currentUser;
@@ -64,6 +71,10 @@ public class MainActivity extends AppCompatActivity {
     String recipeName;
 
     String retrieveFavStatus;
+
+    String recipeNameValue;
+    String levelValue;
+    String timeValue;
 
 
     @Override
@@ -76,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
         RootRef = FirebaseDatabase.getInstance().getReference();
+
 
         drawerLayout = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.navigation_view);
@@ -104,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
         // to make the Navigation drawer icon always appear on the action bar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+
 //
 //        writeNewRecipe("Macaroons", "Customise and bake your own macaroons by following this easy recipe. Substitute your own flavour or colour to be how you want.", "R.drawable.macaroons", "Pastries",
 //        "30m", "Beginner", "1.Separate egg whites", "No", "Yes");
@@ -111,6 +124,26 @@ public class MainActivity extends AppCompatActivity {
 //                "1h30m", "Intermediate", "1.Mix together ingredients", "No", "No");
 
     }
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+//        DatabaseReference recipeName = database.getReference("recipeName");
+        DatabaseReference mDatabase = database.getReference();
+        DatabaseReference recipeName = mDatabase.child("recipes").child("1").child("recipeName");
+        DatabaseReference level = mDatabase.child("recipes").child("1").child("level");
+        DatabaseReference time = mDatabase.child("recipes").child("1").child("time");
+
+        //Read from the database
+        recipeName.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                recipeNameValue = dataSnapshot.getValue(String.class);
+                Log.d(TAG, "Value is: " + recipeNameValue);
+//                TextView textView = findViewById(R.id.recipeName);
+//                textView.setText(recipeNameValue);
+            }
+
 
     @Override
     protected void onStart() {
@@ -126,6 +159,7 @@ public class MainActivity extends AppCompatActivity {
         String currentUserID = mAuth.getCurrentUser().getUid();
         RootRef.child("Users").child(currentUserID).addValueEventListener(new ValueEventListener() {
             @Override
+
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if ((dataSnapshot.child("firstname").exists())) {
                     String retrieveFirstName = dataSnapshot.child("firstname").getValue().toString();
@@ -133,6 +167,39 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     SendUserToAccountActivity();
                 }
+
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
+        level.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                String levelValue = dataSnapshot.getValue(String.class);
+                Log.d(TAG, "Value is: " + levelValue);
+//                TextView textView = findViewById(R.id.level);
+//                textView.setText(levelValue);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
+        time.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                String timeValue = dataSnapshot.getValue(String.class);
+                Log.d(TAG, "Value is: " + timeValue);
+//                TextView textView = findViewById(R.id.time);
+//                textView.setText(timeValue);
+
             }
 
             @Override
@@ -209,6 +276,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public String getRecipeName() {
+
         return recipeName;
     }
 
@@ -259,6 +327,19 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
+
+        return recipeNameValue;
+    }
+    public String getRecipeLevel() {
+        return levelValue;
+    }
+    public String getRecipeTime() {
+        return timeValue;
+    }
+
+    public void fbClick(View view) {
+        startActivity(getOpenFacebookIntent());
+    }
     public Intent getOpenFacebookIntent() {
         try {
             getPackageManager().getPackageInfo("com.facebook.katana", 0);
@@ -304,5 +385,6 @@ public class MainActivity extends AppCompatActivity {
     public String getRecipeNameFromFragment() {
         return recipeName;
     }
+
 
 }
