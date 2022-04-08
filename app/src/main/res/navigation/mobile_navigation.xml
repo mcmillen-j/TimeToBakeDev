@@ -9,6 +9,10 @@
         android:id="@+id/navigation_recipes"
         android:name="com.example.testproject.ui.recipes.RecipesFragment"
         tools:layout="@layout/fragment_recipes" />
+        android:label="Time to Bake"
+        tools:layout="@layout/fragment_recipes"
+
+        />
 
     <fragment
         android:id="@+id/navigation_discover"

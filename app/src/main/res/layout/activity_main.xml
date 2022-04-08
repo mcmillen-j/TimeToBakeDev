@@ -13,12 +13,18 @@
     tools:openDrawer="start"
     app:itemIconTint="@color/blue" >
 
+
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent">-->
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="?attr/actionBarSize" >
 
+        android:paddingTop="?attr/actionBarSize">
 
         <EditText
             android:id="@+id/enter"
@@ -77,6 +83,16 @@
             app:navGraph="@navigation/mobile_navigation" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+<!--    </LinearLayout>-->
+
+<!--    <com.google.android.material.navigation.NavigationView-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:id="@+id/navigation_view"-->
+<!--        android:layout_gravity="start"-->
+<!--        app:menu="@menu/bottom_nav_menu" />-->
 
 
     <!--ArcNavigationView Element-->

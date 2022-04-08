@@ -10,4 +10,8 @@
         android:id="@+id/navigation_timer"
         android:title="Timer"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/navigation_timer"
+        android:title="Timer"
+        app:showAsAction="never" />
 </menu>

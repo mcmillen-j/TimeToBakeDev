@@ -6,7 +6,9 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+
 import android.content.res.ColorStateList;
+
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,9 +20,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+
 import com.example.testproject.databinding.ActivityMainBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+
+import com.example.testproject.ui.favourites.FavouritesFragment;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.NonNull;
@@ -64,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements OnInitListener{
     public DrawerLayout drawerLayout;
     public ActionBarDrawerToggle actionBarDrawerToggle;
 
+
     private Menu menu;
 
     private FirebaseUser currentUser;
@@ -77,6 +84,10 @@ public class MainActivity extends AppCompatActivity implements OnInitListener{
     private int MY_DATA_CHECK_CODE = 0;
     private TextToSpeech myTTS;
 
+    String recipeNameValue;
+    String levelValue;
+    String timeValue;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements OnInitListener{
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
         RootRef = FirebaseDatabase.getInstance().getReference();
+
 
         Button speakButton = (Button) findViewById(R.id.speak);
 
@@ -115,6 +127,7 @@ public class MainActivity extends AppCompatActivity implements OnInitListener{
         //centre app title in Action bar
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.action_bar_layout);
+
 
         drawerLayout = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.navigation_view);
@@ -152,6 +165,26 @@ public class MainActivity extends AppCompatActivity implements OnInitListener{
 
     }
 
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+//        DatabaseReference recipeName = database.getReference("recipeName");
+        DatabaseReference mDatabase = database.getReference();
+        DatabaseReference recipeName = mDatabase.child("recipes").child("1").child("recipeName");
+        DatabaseReference level = mDatabase.child("recipes").child("1").child("level");
+        DatabaseReference time = mDatabase.child("recipes").child("1").child("time");
+
+        //Read from the database
+        recipeName.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                recipeNameValue = dataSnapshot.getValue(String.class);
+                Log.d(TAG, "Value is: " + recipeNameValue);
+//                TextView textView = findViewById(R.id.recipeName);
+//                textView.setText(recipeNameValue);
+            }
+
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -166,6 +199,7 @@ public class MainActivity extends AppCompatActivity implements OnInitListener{
         String currentUserID = mAuth.getCurrentUser().getUid();
         RootRef.child("Users").child(currentUserID).addValueEventListener(new ValueEventListener() {
             @Override
+
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if ((dataSnapshot.child("firstname").exists())) {
                     String retrieveFirstName = dataSnapshot.child("firstname").getValue().toString();
@@ -173,6 +207,39 @@ public class MainActivity extends AppCompatActivity implements OnInitListener{
                 } else {
                     SendUserToAccountActivity();
                 }
+
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
+        level.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                String levelValue = dataSnapshot.getValue(String.class);
+                Log.d(TAG, "Value is: " + levelValue);
+//                TextView textView = findViewById(R.id.level);
+//                textView.setText(levelValue);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
+        time.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                String timeValue = dataSnapshot.getValue(String.class);
+                Log.d(TAG, "Value is: " + timeValue);
+//                TextView textView = findViewById(R.id.time);
+//                textView.setText(timeValue);
+
             }
 
             @Override
@@ -247,9 +314,16 @@ public class MainActivity extends AppCompatActivity implements OnInitListener{
         return super.onOptionsItemSelected(item);
     }
 
+
 //    public String getRecipeName() {
 //        return currentRecipeName;
 //    }
+
+    public String getRecipeName() {
+
+        return recipeName;
+    }
+
 
     public void fbClick(View view) {
         startActivity(getOpenFacebookIntent());
@@ -299,6 +373,19 @@ public class MainActivity extends AppCompatActivity implements OnInitListener{
                 });
     }
 
+
+        return recipeNameValue;
+    }
+    public String getRecipeLevel() {
+        return levelValue;
+    }
+    public String getRecipeTime() {
+        return timeValue;
+    }
+
+    public void fbClick(View view) {
+        startActivity(getOpenFacebookIntent());
+    }
     public Intent getOpenFacebookIntent() {
         try {
             getPackageManager().getPackageInfo("com.facebook.katana", 0);
@@ -421,4 +508,5 @@ public class MainActivity extends AppCompatActivity implements OnInitListener{
         onBackPressed();
         return true;
     }
+
 }
