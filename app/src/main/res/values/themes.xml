@@ -3,7 +3,7 @@
     <style name="Theme.TestProject" parent="Theme.MaterialComponents.Light">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/cream</item>
-        <item name="colorPrimaryVariant">@color/blue</item> //top bar with time
+        <item name="colorPrimaryVariant">@color/blue</item>
         <item name="colorOnPrimary">@color/lightBlue</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/lightBlue</item>
@@ -13,6 +13,7 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
         <item name="android:textColor">@color/blue</item>
+        <item name="android:textColorPrimary">@color/blue</item>
     </style>
 
     <style name="MenuTextStyle" parent="TextAppearance.AppCompat.Medium">

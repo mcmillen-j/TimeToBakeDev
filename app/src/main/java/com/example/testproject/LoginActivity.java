@@ -81,9 +81,15 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                SendUserToMainActivity();
-                                Toast.makeText(LoginActivity.this, "Logged in successfully", Toast.LENGTH_SHORT).show();
-                                loadingBar.dismiss();
+                                if (email.contentEquals("admin@outlook.com")) {
+                                    SendUserToAdminActivity();
+                                    Toast.makeText(LoginActivity.this, "Logged in successfully", Toast.LENGTH_SHORT).show();
+                                    loadingBar.dismiss();
+                                } else {
+                                    SendUserToMainActivity();
+                                    Toast.makeText(LoginActivity.this, "Logged in successfully", Toast.LENGTH_SHORT).show();
+                                    loadingBar.dismiss();
+                                }
                             } else {
                                 String message = task.getException().toString();
                                 Toast.makeText(LoginActivity.this, "Error: " + message, Toast.LENGTH_SHORT).show();
@@ -98,21 +104,23 @@ public class LoginActivity extends AppCompatActivity {
         String emailAddress = UserEmail.getText().toString();
 
         if (TextUtils.isEmpty(emailAddress)) {
+            UserEmail.requestFocus();
             Toast.makeText(this, "Please enter your email address", Toast.LENGTH_SHORT).show();
-        }
-
-        mAuth.sendPasswordResetEmail(emailAddress)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "Email sent.");
-                        } else {
-                            String message = task.getException().toString();
-                            Toast.makeText(LoginActivity.this, "Error: " + message, Toast.LENGTH_SHORT).show();
+        } else {
+            mAuth.sendPasswordResetEmail(emailAddress)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Log.d(TAG, "Email sent.");
+                            } else {
+                                String message = task.getException().toString();
+                                Toast.makeText(LoginActivity.this, "Error: " + message, Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    }
-                });
+                    });
+            Toast.makeText(this, "Reset email has been sent", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void InitializeFields() {
@@ -126,6 +134,13 @@ public class LoginActivity extends AppCompatActivity {
 
     private void SendUserToMainActivity() {
         Intent MainIntent = new Intent(LoginActivity.this, MainActivity.class);
+        MainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(MainIntent);
+        finish();
+    }
+
+    private void SendUserToAdminActivity() {
+        Intent MainIntent = new Intent(LoginActivity.this, AdminActivity.class);
         MainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(MainIntent);
         finish();

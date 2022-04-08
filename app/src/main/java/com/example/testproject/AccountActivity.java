@@ -25,7 +25,7 @@ import java.util.HashMap;
 public class AccountActivity extends AppCompatActivity {
 
     private Button updateAccountInfo;
-    private EditText firstName, lastName, DOB;
+    private EditText firstName, lastName, DOB, dietaryReq;
 
     private String currentUserID;
     private FirebaseAuth mAuth;
@@ -58,27 +58,34 @@ public class AccountActivity extends AppCompatActivity {
         firstName = (EditText) findViewById(R.id.setFirstName);
         lastName = (EditText) findViewById(R.id.setLastName);
         DOB = (EditText) findViewById(R.id.setDOB);
+        dietaryReq = (EditText) findViewById(R.id.setDietaryReq);
     }
 
     private void UpdateAccount() {
         String setFirstName = firstName.getText().toString();
         String setLastName = lastName.getText().toString();
         String setDOB = DOB.getText().toString();
+        String setDietaryReq = dietaryReq.getText().toString();
+
 
         if (TextUtils.isEmpty(setFirstName)) {
-            Toast.makeText(this, "Please enter your first name", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please enter your first name.", Toast.LENGTH_SHORT).show();
         }
         if (TextUtils.isEmpty(setLastName)) {
-            Toast.makeText(this, "Please enter your last name", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please enter your last name.", Toast.LENGTH_SHORT).show();
         }
         if (TextUtils.isEmpty(setDOB)) {
-            Toast.makeText(this, "Please enter your date of birth", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please enter your date of birth.", Toast.LENGTH_SHORT).show();
+        }
+        if (TextUtils.isEmpty(setDietaryReq)) {
+            Toast.makeText(this, "Please enter your dietary requirement. If none, please enter 'none'.", Toast.LENGTH_SHORT).show();
         } else {
             HashMap<String, String> profileMap = new HashMap<>();
             profileMap.put("uid", currentUserID);
             profileMap.put("firstname", setFirstName);
             profileMap.put("lastname", setLastName);
             profileMap.put("dob", setDOB);
+            profileMap.put("dietaryReq", setDietaryReq);
             RootRef.child("Users").child(currentUserID).setValue(profileMap)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
@@ -104,19 +111,25 @@ public class AccountActivity extends AppCompatActivity {
                             String retrieveFirstName = dataSnapshot.child("firstname").getValue().toString();
                             String retrieveLastName = dataSnapshot.child("lastname").getValue().toString();
                             String retrieveDOB = dataSnapshot.child("dob").getValue().toString();
+                            String retrieveDietaryReq = dataSnapshot.child("dietaryReq").getValue().toString();
 
                             firstName.setText(retrieveFirstName);
                             lastName.setText(retrieveLastName);
                             DOB.setText(retrieveDOB);
+                            dietaryReq.setText(retrieveDietaryReq);
+
                         } else if ((dataSnapshot.exists()) && (dataSnapshot.hasChild("firstname"))) {
                             String retrieveFirstName = dataSnapshot.child("firstname").getValue().toString();
                             firstName.setText(retrieveFirstName);
                         } else if ((dataSnapshot.exists()) && (dataSnapshot.hasChild("lastname"))) {
-                        String retrieveLastName = dataSnapshot.child("lastname").getValue().toString();
-                        lastName.setText(retrieveLastName);
+                            String retrieveLastName = dataSnapshot.child("lastname").getValue().toString();
+                            lastName.setText(retrieveLastName);
                         } else if ((dataSnapshot.exists()) && (dataSnapshot.hasChild("DOB"))) {
                             String retrieveDOB = dataSnapshot.child("dob").getValue().toString();
                             DOB.setText(retrieveDOB);
+                        } else if ((dataSnapshot.exists()) && (dataSnapshot.hasChild("dietaryReq"))) {
+                            String retrieveDietaryReq = dataSnapshot.child("dietaryReq").getValue().toString();
+                            dietaryReq.setText(retrieveDietaryReq);
                         } else {
                             Toast.makeText(AccountActivity.this, "Please set and update your profile information.", Toast.LENGTH_SHORT).show();
                         }

@@ -15,12 +15,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageButton
+        <ImageView
             android:id="@+id/recipeImage"
             android:layout_width="fill_parent"
             android:layout_height="150dp"
-            android:onClick="displayRecipeClick"
+            android:adjustViewBounds="true"
             android:alpha="0.7"
+            android:scaleType="fitXY"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
