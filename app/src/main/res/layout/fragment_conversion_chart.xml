@@ -14,7 +14,6 @@
         android:background="#00FFFFFF"
         android:onClick="converterClick"
         android:text="@string/conversion"
-
         android:textAlignment="center"
         android:textSize="14sp"
         android:textStyle="bold"

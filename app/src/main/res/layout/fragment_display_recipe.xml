@@ -48,21 +48,6 @@
         app:layout_constraintVertical_bias="0.109" />
 
     <TextView
-        android:id="@+id/recipeTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="84dp"
-        android:paddingBottom="10dp"
-        android:text="Recipe Time"
-        android:textColor="#FFFFFF"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/timer"
-        app:layout_constraintHorizontal_bias="0.927"
-        app:layout_constraintStart_toEndOf="@+id/recipeName"
-        app:layout_constraintTop_toTopOf="@+id/recipeImage" />
-
-    <TextView
         android:id="@+id/recipeLevel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -76,96 +61,101 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/recipeTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Recipe Time"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/recipeImage"
+        app:layout_constraintEnd_toEndOf="@+id/recipeImage"
+        app:layout_constraintHorizontal_bias="0.872"
+        app:layout_constraintStart_toStartOf="@+id/recipeImage"
+        app:layout_constraintTop_toTopOf="@+id/recipeImage"
+        app:layout_constraintVertical_bias="0.885" />
+
     <ImageView
         android:id="@+id/timer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_marginBottom="8dp"
         android:src="@drawable/ic_baseline_access_time_24"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.9"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/recipeImage"
-        app:layout_constraintVertical_bias="0.162" />
+        app:layout_constraintBottom_toBottomOf="@+id/recipeImage"
+        app:layout_constraintEnd_toEndOf="@+id/recipeImage"
+        app:layout_constraintHorizontal_bias="0.99"
+        app:layout_constraintStart_toStartOf="@+id/recipeImage" />
 
     <TextView
         android:id="@+id/recipeDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Description"
-        android:layout_marginTop="10dp"
         android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:text="Description"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.047"
+        app:layout_constraintHorizontal_bias="0.041"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/recipeImage"
-        app:layout_constraintVertical_bias="0.058" />
-
-    <TextView
-        android:id="@+id/textView11"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:text="Ingredients"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.045"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recipeDescription"
-        app:layout_constraintVertical_bias="0.047" />
-
-    <TextView
-        android:id="@+id/textView10"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:text="Method"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.045"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView11"
-        app:layout_constraintVertical_bias="0.047" />
-
-    <TextView
-        android:id="@+id/recipeMethod"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="Method"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.055"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView10"
         app:layout_constraintVertical_bias="0.028" />
 
     <Button
-        android:id="@+id/startTimerBtn"
+        android:id="@+id/ingredientsBtn"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="104dp"
+        android:backgroundTint="@color/blue"
+        android:text="Ingredients"
+        android:textAllCaps="false"
+        android:textColor="@color/cream"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recipeImage" />
+
+    <Button
+        android:id="@+id/methodBtn"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="28dp"
+        android:backgroundTint="@color/blue"
+        android:text="Method"
+        android:textAllCaps="false"
+        android:textColor="@color/cream"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ingredientsBtn" />
+
+    <TextView
+        android:id="@+id/ratingText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="startTimerClick"
-        android:text="Start Timer"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="7dp"
+        android:text="Overall Rating: "
+        android:textColor="@color/lightBlue"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/ratingBar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recipeMethod"
-        app:layout_constraintVertical_bias="0.156" />
+        app:layout_constraintTop_toBottomOf="@+id/methodBtn" />
 
     <RatingBar
         android:id="@+id/ratingBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="108dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/startTimerBtn" />
+        app:layout_constraintTop_toTopOf="@+id/methodBtn" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

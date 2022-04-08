@@ -40,11 +40,10 @@
             android:textColorHint="#183C79" />
 
         <ImageButton
-            android:id="@+id/searchImg"
+            android:id="@+id/searchBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="#0000"
-            android:onClick="searchClick"
             android:layout_marginTop="20dp"
             android:src="@drawable/ic_baseline_search_24"
             android:gravity="right" />
@@ -61,6 +60,13 @@
             android:textSize="20sp"
             android:textStyle="bold"
             android:layout_marginLeft="10dp" />
+
+        <WebView
+            android:id="@+id/webView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp" />
 
         <com.google.android.gms.maps.MapView
             android:id="@+id/mapView"

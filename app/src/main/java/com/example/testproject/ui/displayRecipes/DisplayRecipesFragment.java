@@ -1,5 +1,6 @@
 package com.example.testproject.ui.displayRecipes;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -32,6 +33,8 @@ import com.example.testproject.AccountActivity;
 import com.example.testproject.MainActivity;
 import com.example.testproject.R;
 import com.example.testproject.recipe;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -43,12 +46,17 @@ import org.w3c.dom.Text;
 
 public class DisplayRecipesFragment extends Fragment {
 
-    private TextView recipeNameText, recipeTimeText, recipeLevelText, recipeDescriptionText, recipeIngredientsText, recipeMethodText;
+    private TextView recipeNameText, recipeTimeText, recipeLevelText, recipeDescriptionText, overallRatingText;
     private ImageView recipeImage;
+    private Button ingredientsBtn, methodBtn;
     private ImageButton favImageBtn;
     private RatingBar ratingBar;
 
-    private DatabaseReference RecipeRef;
+    private DatabaseReference RecipeRef, RatingRef;
+
+    private FirebaseAuth mAuth;
+
+    private String currentUserID, currentRecipeName;
 
     public static DisplayRecipesFragment newInstance() {
         return new DisplayRecipesFragment();
@@ -60,41 +68,42 @@ public class DisplayRecipesFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_display_recipe, null);
 
         MainActivity activity = (MainActivity) getActivity();
-        final String[] recipeName = {activity.getRecipeNameFromFragment().toString()};
+        currentRecipeName = activity.getRecipeNameClicked();
 
         recipeNameText = (TextView) view.findViewById(R.id.recipeName);
         recipeLevelText = (TextView) view.findViewById(R.id.recipeLevel);
         recipeTimeText = (TextView) view.findViewById(R.id.recipeTime);
         recipeDescriptionText = (TextView) view.findViewById(R.id.recipeDescription);
-        recipeMethodText = (TextView) view.findViewById(R.id.recipeMethod);
 
         recipeImage = (ImageView) view.findViewById(R.id.recipeImage);
         favImageBtn = (ImageButton) view.findViewById(R.id.favouriteImg);
-
+        ingredientsBtn = (Button) view.findViewById(R.id.ingredientsBtn);
+        methodBtn = (Button) view.findViewById(R.id.methodBtn);
         ratingBar = (RatingBar) view.findViewById(R.id.ratingBar); // initiate a rating bar
 
-        RecipeRef = FirebaseDatabase.getInstance().getReference();
-        final String[] retrieveRecipeName = new String[1];
+        overallRatingText = (TextView) view.findViewById(R.id.ratingText);
 
-        RecipeRef.child("Recipes").child(recipeName[0])
+        RecipeRef = FirebaseDatabase.getInstance().getReference();
+        RatingRef = FirebaseDatabase.getInstance().getReference().child("Ratings");
+
+        mAuth = FirebaseAuth.getInstance();
+        currentUserID = mAuth.getCurrentUser().getUid();
+
+        RecipeRef.child("Recipes").child(currentRecipeName)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        retrieveRecipeName[0] = dataSnapshot.child("recipeName").getValue().toString();
+                        String retrieveRecipeName = dataSnapshot.child("recipeName").getValue().toString();
                         String retrieveLevel = dataSnapshot.child("level").getValue().toString();
                         String retrieveTime = dataSnapshot.child("time").getValue().toString();
                         String retrieveDescription = dataSnapshot.child("description").getValue().toString();
                         String retrieveImage = dataSnapshot.child("image").getValue().toString();
-                        String retrieveRating = dataSnapshot.child("rating").getValue().toString();
-
                         String retrieveFavStatus = dataSnapshot.child("favourite").getValue().toString();
 
-                        recipeNameText.setText(retrieveRecipeName[0]);
+                        recipeNameText.setText(retrieveRecipeName);
                         recipeLevelText.setText(retrieveLevel);
                         recipeTimeText.setText(retrieveTime);
                         recipeDescriptionText.setText(retrieveDescription);
-                        recipeMethodText.setText(retrieveFavStatus);
-                        ratingBar.setRating(Float.parseFloat(retrieveRating));
                         Picasso.get().load(retrieveImage).into(recipeImage);
 
                         if (retrieveFavStatus.contentEquals("Yes")) {
@@ -110,17 +119,64 @@ public class DisplayRecipesFragment extends Fragment {
                     }
                 });
 
+        RatingRef.child(currentUserID)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if ((dataSnapshot.exists())) {
+                            if ((dataSnapshot.child(currentRecipeName).exists())) {
+                                String retrieveRating = dataSnapshot.child(currentRecipeName).getValue().toString();
+                                ratingBar.setRating(Float.parseFloat(retrieveRating));
+                            } else {
+                                RatingRef.child(currentUserID).child(currentRecipeName).setValue("0.0");
+                            }
+                        } else {
+                            RatingRef.child(currentUserID).child(currentRecipeName).setValue("0.0");
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+        ingredientsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(view).navigate(R.id.navigation_ingredients);
+            }
+        });
+
+        methodBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(view).navigate(R.id.navigation_method);
+            }
+        });
 
         favImageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                activity.updateFavouriteClick(retrieveRecipeName[0]);
-                Toast.makeText(getContext(), "Clicked", Toast.LENGTH_SHORT).show();
+                activity.updateFavouriteClick(currentRecipeName);
             }
         });
+
+        addListenerOnRatingBar();
 
         return view;
     }
 
+    public void addListenerOnRatingBar() {
+
+        //if rating value is changed, update database
+        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            public void onRatingChanged(RatingBar ratingBar, float rating,
+                                        boolean fromUser) {
+                String s = Float.toString(rating);
+                RatingRef.child(currentUserID).child(currentRecipeName).setValue(s);
+            }
+        });
+    }
 
 }

@@ -2,32 +2,25 @@ package com.example.testproject;
 
 public class recipe {
 
-    // Variable to store data corresponding
-    // to recipe name keyword in database
+    // Variable to store data corresponding to level keyword in database
     private String recipeName;
 
-    // Variable to store data corresponding
-    // to level keyword in database
+    // Variable to store data corresponding to level keyword in database
     private String level;
 
-    // Variable to store data corresponding
-    // to image keyword in database
+    // Variable to store data corresponding to level keyword in database
     private String image;
 
-    // Variable to store data corresponding
-    // to time keyword in database
+    // Variable to store data corresponding to level keyword in database
     private String time;
 
-    // Variable to store data corresponding
-    // to category keyword in database
+    // Variable to store data corresponding to level keyword in database
     private String category;
 
-    // Variable to store data corresponding
-    // to category keyword in database
+    // Variable to store data corresponding to level keyword in database
     private String favourite;
 
-    // Mandatory empty constructor
-    // for use of FirebaseUI
+    // Mandatory empty constructor for use of FirebaseUI
     public recipe() {
     }
 
@@ -80,5 +73,6 @@ public class recipe {
     public void setFavourite(String favourite) {
         this.favourite = favourite;
     }
+
 }
 

@@ -1,15 +1,21 @@
 package com.example.testproject;
 
 import android.Manifest;
+import android.app.ActionBar;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
-import android.widget.ImageButton;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.testproject.databinding.ActivityMainBinding;
@@ -19,7 +25,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.navigation.NavController;
@@ -43,11 +50,13 @@ import com.karumi.dexter.listener.PermissionDeniedResponse;
 import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
-import com.squareup.picasso.Picasso;
 
-import java.util.HashMap;
+import android.speech.tts.TextToSpeech;
+import android.speech.tts.TextToSpeech.OnInitListener;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.Locale;
+
+public class MainActivity extends AppCompatActivity implements OnInitListener{
 
     private ActivityMainBinding binding;
     private static final String TAG = "MainActivity";
@@ -61,9 +70,12 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private DatabaseReference RootRef;
 
-    String recipeName;
+    private String currentRecipeName;
+    private String retrieveFavStatus;
+    private String recipeNameToPass, recipeTimeToPass;
 
-    String retrieveFavStatus;
+    private int MY_DATA_CHECK_CODE = 0;
+    private TextToSpeech myTTS;
 
 
     @Override
@@ -76,6 +88,33 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
         RootRef = FirebaseDatabase.getInstance().getReference();
+
+        Button speakButton = (Button) findViewById(R.id.speak);
+
+        Intent checkTTSIntent = new Intent();
+        checkTTSIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
+        startActivityForResult(checkTTSIntent, MY_DATA_CHECK_CODE);
+
+        speakButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EditText enteredText = (EditText)findViewById(R.id.enter);
+                String words = enteredText.getText().toString();
+//                speakWords(words);
+            }
+        });
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel("notify", "notify", NotificationManager.IMPORTANCE_DEFAULT);
+            String description = "Hello";
+            channel.setDescription(description);
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel);
+        }
+
+        //centre app title in Action bar
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setCustomView(R.layout.action_bar_layout);
 
         drawerLayout = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.navigation_view);
@@ -103,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
 
         // to make the Navigation drawer icon always appear on the action bar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
 //
 //        writeNewRecipe("Macaroons", "Customise and bake your own macaroons by following this easy recipe. Substitute your own flavour or colour to be how you want.", "R.drawable.macaroons", "Pastries",
@@ -157,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void writeNewRecipe(String name, String description, String image, String category,
-                               String time, String level, String method, String favourite, String recipeOfWeek) {
+                               String time, String level, String recipeOfWeek) {
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
 //        DatabaseReference recipeName = database.getReference("name");
@@ -168,8 +208,6 @@ public class MainActivity extends AppCompatActivity {
         mDatabase.child("Recipes").child(name).child("category").setValue(category);
         mDatabase.child("Recipes").child(name).child("time").setValue(time);
         mDatabase.child("Recipes").child(name).child("level").setValue(level);
-        mDatabase.child("Recipes").child(name).child("method").setValue(method);
-        mDatabase.child("Recipes").child(name).child("favourite").setValue(favourite);
         mDatabase.child("Recipes").child(name).child("recipeOfWeek").setValue(recipeOfWeek);
     }
 
@@ -205,12 +243,13 @@ public class MainActivity extends AppCompatActivity {
         if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 
-    public String getRecipeName() {
-        return recipeName;
-    }
+//    public String getRecipeName() {
+//        return currentRecipeName;
+//    }
 
     public void fbClick(View view) {
         startActivity(getOpenFacebookIntent());
@@ -229,15 +268,16 @@ public class MainActivity extends AppCompatActivity {
         Navigation.findNavController(view).navigate(R.id.navigation_pastries);
     }
 
-    public void displayRecipeClick(View view) {
+    public void cakesClick(View view) {
+        Navigation.findNavController(view).navigate(R.id.navigation_cakes);
+    }
+
+    public void displayRecipeClick(View view, String recipeNameClicked) {
         Navigation.findNavController(view).navigate(R.id.navigation_display_recipe);
-        recipeName = "Macaroons";
-        Toast.makeText(this, recipeName, Toast.LENGTH_SHORT).show();
+        currentRecipeName = recipeNameClicked;
     }
 
     public void updateFavouriteClick(String recipeNameRetrieved) {
-//        String currentRecipeName = "Macaroons";
-
         Toast.makeText(this, "Clicked", Toast.LENGTH_SHORT).show();
 
         RootRef.child("Recipes").child(recipeNameRetrieved)
@@ -301,8 +341,84 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    public String getRecipeNameFromFragment() {
-        return recipeName;
+    public String getRecipeNameClicked() {
+        return currentRecipeName;
     }
 
+    public void sendNotification() {
+        // Explicit intent to open activity from notification
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "notify")
+                .setSmallIcon(R.drawable.ic_baseline_access_alarms_24)
+                .setContentTitle("Timer Ended")
+                .setContentText("Baking time is up, check the oven.")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        // notificationId is a unique int for each notification
+        notificationManager.notify(1, builder.build());
+    }
+
+    @Override
+    public void onInit(int initStatus) {
+
+        //check for successful instantiation
+        if (initStatus == TextToSpeech.SUCCESS) {
+            myTTS.setLanguage(Locale.US);
+            myTTS.speak("Hello World", TextToSpeech.QUEUE_FLUSH, null);
+
+//            if(myTTS.isLanguageAvailable(Locale.US)==TextToSpeech.LANG_AVAILABLE)
+//                myTTS.setLanguage(Locale.US);
+        }
+        else if (initStatus == TextToSpeech.ERROR) {
+            Toast.makeText(this, "Sorry! Text To Speech failed...", Toast.LENGTH_LONG).show();
+        }
+    }
+
+//    private void speakWords(String speech) {
+//        myTTS.speak(speech, TextToSpeech.QUEUE_FLUSH, null);
+//    }
+
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == MY_DATA_CHECK_CODE) {
+            if (resultCode == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
+                myTTS = new TextToSpeech(this, this);
+            } else {
+                Intent installTTSIntent = new Intent();
+                installTTSIntent.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
+                startActivity(installTTSIntent);
+            }
+        }
+    }
+
+    public void setRecipeNameToDisplay(String recipeName) {
+        recipeNameToPass = recipeName;
+        Log.d("RecipeNameReceived: ", recipeName);
+    }
+
+    public String getRecipeNameToDisplay() {
+        return recipeNameToPass;
+    }
+
+    public void setTimeSelected(String recipeTime) {
+        recipeTimeToPass = recipeTime;
+        Log.d("RecipeTimeReceived: ", recipeTime);
+    }
+
+    public String getRecipeTimeToDisplay() {
+        return recipeTimeToPass;
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
 }

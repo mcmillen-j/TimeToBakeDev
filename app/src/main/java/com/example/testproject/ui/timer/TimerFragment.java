@@ -1,7 +1,11 @@
 package com.example.testproject.ui.timer;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.LayoutInflater;
@@ -15,6 +19,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -56,20 +62,18 @@ public class TimerFragment extends Fragment {
         mButtonStartPause = view.findViewById(R.id.button_start_pause);
         mButtonReset = view.findViewById(R.id.button_reset);
 
-        MainActivity activity = (MainActivity) getActivity();
-
         mButtonSet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String input = mEditTextInput.getText().toString();
                 if (input.length() == 0) {
-                    Toast.makeText(activity, "Field can't be empty", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Field can't be empty", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 long millisInput = Long.parseLong(input) * 60000;
                 if (millisInput == 0) {
-                    Toast.makeText(activity, "Please enter a positive number", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Please enter a positive number", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -124,6 +128,8 @@ public class TimerFragment extends Fragment {
             public void onFinish() {
                 mTimerRunning = false;
                 updateWatchInterface();
+                MainActivity activity = (MainActivity) getActivity();
+                activity.sendNotification();
             }
         }.start();
 
@@ -182,6 +188,7 @@ public class TimerFragment extends Fragment {
             } else {
                 mButtonReset.setVisibility(View.INVISIBLE);
             }
+
         }
     }
 
@@ -239,5 +246,6 @@ public class TimerFragment extends Fragment {
             }
         }
     }
+
 
 }

@@ -46,7 +46,22 @@
         tools:layout="@layout/fragment_pastries" />
 
     <fragment
+        android:id="@+id/navigation_cakes"
+        android:name="com.example.testproject.ui.cakes.CakesFragment"
+        tools:layout="@layout/fragment_cakes" />
+
+    <fragment
         android:id="@+id/navigation_display_recipe"
         android:name="com.example.testproject.ui.displayRecipes.DisplayRecipesFragment"
         tools:layout="@layout/fragment_display_recipe" />
+
+    <fragment
+        android:id="@+id/navigation_ingredients"
+        android:name="com.example.testproject.ui.ingredients.IngredientsFragment"
+        tools:layout="@layout/fragment_ingredients" />
+
+    <fragment
+        android:id="@+id/navigation_method"
+        android:name="com.example.testproject.ui.method.MethodFragment"
+        tools:layout="@layout/fragment_method" />
 </navigation>

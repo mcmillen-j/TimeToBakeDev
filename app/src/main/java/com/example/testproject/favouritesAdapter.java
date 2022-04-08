@@ -1,11 +1,12 @@
 package com.example.testproject;
 
-import android.net.Uri;
-import android.telecom.Call;
+import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -16,38 +17,45 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 
-import org.w3c.dom.Text;
-
-import java.util.List;
-
 // FirebaseRecyclerAdapter is a class provided by
 // FirebaseUI. it provides functions to bind, adapt and show
 // database contents in a Recycler View
-public class recipeAdapter extends FirebaseRecyclerAdapter<
-        recipe, recipeAdapter.recipesViewholder> {
+public class favouritesAdapter extends FirebaseRecyclerAdapter<
+        recipe, favouritesAdapter.favouritesViewholder> {
+
+    private Context mContext;
+
+    private String recipeName = "No favourites";
 
 
-    public recipeAdapter(
-            @NonNull FirebaseRecyclerOptions<recipe> options) {
+    public favouritesAdapter(
+            @NonNull FirebaseRecyclerOptions<recipe> options, Context context) {
         super(options);
+        this.mContext = context;
     }
 
     // Function to bind the view in Card view(here
-    // "recipe.xml") with data in
+    // "favourite.xml") with data in
     // model class(here "recipe.class")
     @Override
     protected void
-    onBindViewHolder(@NonNull recipesViewholder holder,
+    onBindViewHolder(@NonNull favouritesViewholder holder,
                      int position, @NonNull recipe model) {
 
-        if (model.getCategory().toString().contentEquals("Pastries")) {
+        if(mContext instanceof MainActivity){
+            MainActivity activity = (MainActivity)mContext;
+            recipeName = activity.getRecipeNameToDisplay();
+            Log.d("Recipe in adapter: ", recipeName);
+        }
+
+        if (model.getRecipeName().contentEquals(recipeName)) {
             // Add recipe name from model class (here
             // "recipe.class")to appropriate view in Card
             // view (here "recipe.xml")
             holder.recipeName.setText(model.getRecipeName());
 
             // Add time from model class (here
-            // "person.class")to appropriate view in Card
+            // "recipe.class")to appropriate view in Card
             // view (here "recipe.xml")
             holder.recipeTime.setText(model.getTime());
 
@@ -61,8 +69,22 @@ public class recipeAdapter extends FirebaseRecyclerAdapter<
             // view (here "recipe.xml")
             String link = model.getImage();
             Picasso.get().load(link).into(holder.recipeImage);
+
+            holder.favImage.setImageResource(R.drawable.ic_baseline_favorite_24);
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String recipeID = getRef(position).getKey();
+                    Log.d("RecipeID clicked: ", recipeID);
+                    if (mContext instanceof MainActivity) {
+                        ((MainActivity)mContext).displayRecipeClick(v, recipeID);
+                    }
+                }
+            });
         } else {
             holder.itemView.setVisibility(View.GONE);
+            holder.itemView.setLayoutParams(new RecyclerView.LayoutParams(0, 0));
         }
     }
 
@@ -71,28 +93,30 @@ public class recipeAdapter extends FirebaseRecyclerAdapter<
     // which the data will be shown
     @NonNull
     @Override
-    public recipesViewholder
+    public favouritesViewholder
     onCreateViewHolder(@NonNull ViewGroup parent,
                        int viewType) {
         View view
                 = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.recipe, parent, false);
-        return new recipeAdapter.recipesViewholder(view);
+                .inflate(R.layout.favourite, parent, false);
+        return new favouritesAdapter.favouritesViewholder(view);
     }
 
     // Sub Class to create references of the views in Card
     // view (here "recipe.xml")
-    class recipesViewholder
+    class favouritesViewholder
             extends RecyclerView.ViewHolder {
         TextView recipeName, recipeTime, recipeLevel;
-        ImageButton recipeImage;
+        ImageView recipeImage;
+        ImageButton favImage;
 
-        public recipesViewholder(@NonNull View itemView) {
+        public favouritesViewholder(@NonNull View itemView) {
             super(itemView);
             recipeName = itemView.findViewById(R.id.recipeName);
             recipeTime = itemView.findViewById(R.id.recipeTime);
             recipeLevel = itemView.findViewById(R.id.recipeLevel);
             recipeImage = itemView.findViewById(R.id.recipeImage);
+            favImage = itemView.findViewById(R.id.favouriteImg);
         }
     }
 }

@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import com.example.testproject.MainActivity;
 import com.example.testproject.R;
@@ -47,7 +48,6 @@ public class RecipesFragment extends Fragment {
         recipeTime = (TextView) view.findViewById(R.id.recipeTime);
         recipeWeekBtn = (ImageButton) view.findViewById(R.id.recipeWeekBtn);
 
-
         RecipeRef = FirebaseDatabase.getInstance().getReference();
 
         RecipeRef.child("Recipes")
@@ -66,6 +66,14 @@ public class RecipesFragment extends Fragment {
                                 recipeLevel.setText(retrieveLevel);
                                 recipeTime.setText(retrieveTime);
                                 Picasso.get().load(retrieveImage).into(recipeWeekBtn);
+
+                                recipeWeekBtn.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        MainActivity activity = (MainActivity) getActivity();
+                                        activity.displayRecipeClick(v, retrieveRecipeName);
+                                    }
+                                });
                             }
                         }
                     }
