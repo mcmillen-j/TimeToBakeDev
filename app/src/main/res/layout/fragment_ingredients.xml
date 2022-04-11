@@ -4,17 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.ingredients.IngredientsFragment">
-
-    <!--    <androidx.recyclerview.widget.RecyclerView-->
-    <!--        android:id="@+id/recyclerView"-->
-    <!--        android:layout_width="382dp"-->
-    <!--        android:layout_height="335dp"-->
-    <!--        android:layout_marginBottom="268dp"-->
-    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintHorizontal_bias="0.448"-->
-    <!--        app:layout_constraintStart_toStartOf="parent" />-->
+    tools:context=".ui.IngredientsFragment">
 
     <TextView
         android:id="@+id/text_ingredients"
@@ -59,17 +49,29 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/conversionChartBtn" />
 
-    <ListView
-        android:id="@+id/ingredientsList"
-        android:layout_width="wrap_content"
-        android:layout_height="123dp"
-        android:layout_marginTop="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="164dp"
+        android:layout_marginEnd="8dp"
+        android:fillViewport="true"
+        android:scrollbarAlwaysDrawVerticalTrack="true"
+        android:scrollbarDefaultDelayBeforeFade="400"
+        android:scrollbarFadeDuration="400"
+        android:scrollbars="vertical"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_check"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/text_check">
 
-
+        <ListView
+            android:id="@+id/ingredientsList"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_check"
+            app:layout_constraintVertical_bias="0.0" />
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

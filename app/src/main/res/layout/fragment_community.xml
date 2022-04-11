@@ -17,7 +17,7 @@
         android:layout_weight="1"
         android:layout_gravity="fill"
         android:orientation="vertical"
-        tools:context=".ui.community.CommunityFragment">
+        tools:context=".ui.CommunityFragment">
 
         <TextView
             android:id="@+id/text_community"

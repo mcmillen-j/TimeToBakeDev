@@ -6,5 +6,6 @@
     <color name="cream">#FFFEF2</color>
     <color name="lightBlue">#5B85A9</color>
     <color name="green">#00FF00</color>
+    <color name="red">#FF0000</color>
     <color name="title_color">#183C79</color>
 </resources>

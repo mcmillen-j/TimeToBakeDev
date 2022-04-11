@@ -1,11 +1,7 @@
-package com.example.testproject.ui.timer;
+package com.example.testproject.ui;
 
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.LayoutInflater;
@@ -16,15 +12,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-
 import com.example.testproject.MainActivity;
 import com.example.testproject.R;
 import com.example.testproject.databinding.FragmentTimerBinding;
@@ -33,19 +22,14 @@ import java.util.Locale;
 
 public class TimerFragment extends Fragment {
 
-    private TimerViewModel timerViewModel;
     private FragmentTimerBinding binding;
-
     private EditText mEditTextInput;
     private TextView mTextViewCountDown;
     private Button mButtonSet;
     private Button mButtonStartPause;
     private Button mButtonReset;
-
     private CountDownTimer mCountDownTimer;
-
     private boolean mTimerRunning;
-
     private long mStartTimeInMillis;
     private long mTimeLeftInMillis;
     private long mEndTime;
@@ -57,7 +41,6 @@ public class TimerFragment extends Fragment {
 
         mEditTextInput = view.findViewById(R.id.edit_text_input);
         mTextViewCountDown = view.findViewById(R.id.text_view_countdown);
-
         mButtonSet = view.findViewById(R.id.button_set);
         mButtonStartPause = view.findViewById(R.id.button_start_pause);
         mButtonReset = view.findViewById(R.id.button_reset);
@@ -111,7 +94,7 @@ public class TimerFragment extends Fragment {
     private void setTime(long milliseconds) {
         mStartTimeInMillis = milliseconds;
         resetTimer();
-        closeKeyboard();
+        CloseKeyboard();
     }
 
     private void startTimer() {
@@ -132,7 +115,6 @@ public class TimerFragment extends Fragment {
                 activity.sendNotification();
             }
         }.start();
-
         mTimerRunning = true;
         updateWatchInterface();
     }
@@ -162,7 +144,6 @@ public class TimerFragment extends Fragment {
             timeLeftFormatted = String.format(Locale.getDefault(),
                     "%02d:%02d", minutes, seconds);
         }
-
         mTextViewCountDown.setText(timeLeftFormatted);
     }
 
@@ -182,17 +163,15 @@ public class TimerFragment extends Fragment {
             } else {
                 mButtonStartPause.setVisibility(View.VISIBLE);
             }
-
             if (mTimeLeftInMillis < mStartTimeInMillis) {
                 mButtonReset.setVisibility(View.VISIBLE);
             } else {
                 mButtonReset.setVisibility(View.INVISIBLE);
             }
-
         }
     }
 
-    private void closeKeyboard() {
+    private void CloseKeyboard() {
         View view = this.getActivity().getCurrentFocus();
         if (view != null) {
             InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -235,7 +214,6 @@ public class TimerFragment extends Fragment {
         if (mTimerRunning) {
             mEndTime = prefs.getLong("endTime", 0);
             mTimeLeftInMillis = mEndTime - System.currentTimeMillis();
-
             if (mTimeLeftInMillis < 0) {
                 mTimeLeftInMillis = 0;
                 mTimerRunning = false;
@@ -246,6 +224,4 @@ public class TimerFragment extends Fragment {
             }
         }
     }
-
-
 }

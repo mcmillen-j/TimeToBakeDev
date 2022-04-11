@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.conversionChart.ConversionChartFragment">
+    tools:context=".ui.ConversionChartFragment">
 
     <Button
         android:id="@+id/button2"
@@ -27,12 +27,12 @@
         android:layout_width="409dp"
         android:layout_height="450dp"
         android:layout_marginBottom="104dp"
-        android:src="@drawable/conversion_chart_image"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@id/button2"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button2"
         app:layout_constraintVertical_bias="0.23" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

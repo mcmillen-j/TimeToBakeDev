@@ -58,6 +58,8 @@ public class AdminActivity extends AppCompatActivity {
                 CreateNewAccount();
             }
         });
+
+        SendNotification();
     }
 
     private void CreateNewAccount() {

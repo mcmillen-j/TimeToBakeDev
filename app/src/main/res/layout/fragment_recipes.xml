@@ -4,7 +4,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.recipes.RecipesFragment">
+    tools:context=".ui.RecipesFragment">
+
+    <EditText
+        android:id="@+id/inputText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="60dp"
+        android:layout_marginBottom="20dp"
+        android:hint="Tap to speak"
+        app:layout_constraintBottom_toTopOf="@+id/recipeWeekBtn"
+        app:layout_constraintStart_toEndOf="@+id/textView2"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <ImageButton
+        android:id="@+id/micBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="18dp"
+        android:backgroundTint="#0000"
+        android:src="@drawable/ic_baseline_mic_off_24"
+        app:layout_constraintBottom_toTopOf="@+id/recipeWeekBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.941"
+        app:layout_constraintStart_toEndOf="@+id/inputText"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/textView2"
@@ -19,13 +45,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageButton
+    <ImageView
         android:id="@+id/recipeWeekBtn"
-        android:layout_width="match_parent"
-        android:layout_height="114dp"
-        android:layout_marginTop="20dp"
+        android:layout_width="fill_parent"
+        android:layout_height="115dp"
         android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
+        android:adjustViewBounds="true"
         android:alpha="0.7"
+        android:scaleType="fitXY"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -38,7 +66,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginStart="16dp"
         android:text="Recipe Name"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/lightBlue"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/recipeWeekBtn"
@@ -50,18 +78,18 @@
         android:id="@+id/recipeTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="200dp"
+        android:layout_marginStart="156dp"
         android:layout_marginTop="112dp"
         android:paddingBottom="10dp"
         android:text="Recipe Time"
         android:textAlignment="textEnd"
-        android:textColor="@color/white"
+        android:textColor="@color/lightBlue"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/recipeWeekBtn"
         app:layout_constraintStart_toEndOf="@+id/recipeName"
         app:layout_constraintTop_toTopOf="@+id/recipeWeekBtn"
-        app:layout_constraintVertical_bias="0.8" />
+        app:layout_constraintVertical_bias="0.794" />
 
     <ImageView
         android:id="@+id/timer"
@@ -82,7 +110,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="8dp"
         android:text="Recipe Level"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/lightBlue"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -101,14 +129,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/recipeWeekBtn" />
 
-    <ImageButton
+    <ImageView
         android:id="@+id/pastriesBtn"
-        android:layout_width="match_parent"
-        android:layout_height="114dp"
+        android:layout_width="fill_parent"
+        android:layout_height="115dp"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:onClick="pastriesClick"
-        android:src="@drawable/pastries"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.25"
         app:layout_constraintStart_toStartOf="parent"
@@ -125,18 +154,43 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pastriesBtn" />
 
-    <ImageButton
+    <ImageView
         android:id="@+id/cakesBtn"
-        android:layout_width="match_parent"
-        android:layout_height="114dp"
+        android:layout_width="fill_parent"
+        android:layout_height="115dp"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:onClick="cakesClick"
-        android:src="@drawable/cake"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.25"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:text="Breads"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cakesBtn" />
+
+    <ImageView
+        android:id="@+id/breadBtn"
+        android:layout_width="fill_parent"
+        android:layout_height="115dp"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:onClick="breadClick"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.25"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

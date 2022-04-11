@@ -1,13 +1,5 @@
-package com.example.testproject.ui.displayRecipes;
+package com.example.testproject.ui;
 
-import androidx.activity.OnBackPressedCallback;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.ViewModelProvider;
-
-import android.content.Context;
-import android.content.Intent;
-import android.media.Image;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,26 +7,18 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.testproject.AccountActivity;
 import com.example.testproject.MainActivity;
 import com.example.testproject.R;
-import com.example.testproject.recipe;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -42,17 +26,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Text;
-
 public class DisplayRecipesFragment extends Fragment {
 
-    private TextView recipeNameText, recipeTimeText, recipeLevelText, recipeDescriptionText, overallRatingText;
+    private TextView recipeNameText, recipeTimeText, recipeLevelText, recipeDescriptionText, overallRatingText, recipeServesText;
     private ImageView recipeImage;
     private Button ingredientsBtn, methodBtn;
     private ImageButton favImageBtn;
     private RatingBar ratingBar;
 
-    private DatabaseReference RecipeRef, RatingRef;
+    private DatabaseReference RecipeRef, FavouritesRef, RatingRef;
 
     private FirebaseAuth mAuth;
 
@@ -74,6 +56,7 @@ public class DisplayRecipesFragment extends Fragment {
         recipeLevelText = (TextView) view.findViewById(R.id.recipeLevel);
         recipeTimeText = (TextView) view.findViewById(R.id.recipeTime);
         recipeDescriptionText = (TextView) view.findViewById(R.id.recipeDescription);
+        recipeServesText = (TextView) view.findViewById(R.id.recipeServes);
 
         recipeImage = (ImageView) view.findViewById(R.id.recipeImage);
         favImageBtn = (ImageButton) view.findViewById(R.id.favouriteImg);
@@ -84,6 +67,7 @@ public class DisplayRecipesFragment extends Fragment {
         overallRatingText = (TextView) view.findViewById(R.id.ratingText);
 
         RecipeRef = FirebaseDatabase.getInstance().getReference();
+        FavouritesRef = FirebaseDatabase.getInstance().getReference().child("Favourites");
         RatingRef = FirebaseDatabase.getInstance().getReference().child("Ratings");
 
         mAuth = FirebaseAuth.getInstance();
@@ -98,17 +82,30 @@ public class DisplayRecipesFragment extends Fragment {
                         String retrieveTime = dataSnapshot.child("time").getValue().toString();
                         String retrieveDescription = dataSnapshot.child("description").getValue().toString();
                         String retrieveImage = dataSnapshot.child("image").getValue().toString();
-                        String retrieveFavStatus = dataSnapshot.child("favourite").getValue().toString();
+                        String retrieveServes = dataSnapshot.child("serves").getValue().toString();
 
                         recipeNameText.setText(retrieveRecipeName);
                         recipeLevelText.setText(retrieveLevel);
                         recipeTimeText.setText(retrieveTime);
                         recipeDescriptionText.setText(retrieveDescription);
                         Picasso.get().load(retrieveImage).into(recipeImage);
+                        recipeServesText.setText(retrieveServes);
+                    }
 
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+        FavouritesRef.child(currentUserID).child(currentRecipeName).child("Favourite")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        String retrieveFavStatus = dataSnapshot.getValue().toString();
                         if (retrieveFavStatus.contentEquals("Yes")) {
                             favImageBtn.setImageResource(R.drawable.ic_baseline_favorite_24);
-                        } else if (retrieveFavStatus.contentEquals("No")) {
+                        } if (retrieveFavStatus.contentEquals("No")) {
                             favImageBtn.setImageResource(R.drawable.ic_baseline_favorite_border_24);
                         }
                     }
@@ -158,7 +155,7 @@ public class DisplayRecipesFragment extends Fragment {
         favImageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                activity.updateFavouriteClick(currentRecipeName);
+                activity.updateFavouriteClick(view, currentRecipeName);
             }
         });
 

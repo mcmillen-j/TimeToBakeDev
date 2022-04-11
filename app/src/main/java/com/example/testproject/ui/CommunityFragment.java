@@ -1,18 +1,11 @@
-package com.example.testproject.ui.community;
+package com.example.testproject.ui;
 
-import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.ViewModelProvider;
-
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,11 +14,9 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.example.testproject.R;
-import com.google.android.gms.maps.MapView;
 
 public class CommunityFragment extends Fragment {
 
-    private CommunityViewModel mViewModel;
     private WebView webView;
 
     public static CommunityFragment newInstance() {
@@ -49,11 +40,5 @@ public class CommunityFragment extends Fragment {
         return view;
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(CommunityViewModel.class);
-        // TODO: Use the ViewModel
-    }
 
 }
