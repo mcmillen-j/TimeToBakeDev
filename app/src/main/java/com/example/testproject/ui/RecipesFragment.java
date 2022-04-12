@@ -1,21 +1,14 @@
-package com.example.testproject.ui.recipes;
+package com.example.testproject.ui;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.Navigation;
-
 import com.example.testproject.MainActivity;
 import com.example.testproject.R;
 import com.example.testproject.databinding.FragmentRecipesBinding;
@@ -35,7 +28,7 @@ public class RecipesFragment extends Fragment {
     private DatabaseReference RecipeRef;
 
     private TextView recipeName, recipeTime, recipeLevel;
-    private ImageButton recipeWeekBtn;
+    private ImageView recipeWeekBtn, pastriesBtn, cakesBtn, breadBtn;
 
     private static final String TAG = "RecipesFragment";
 
@@ -48,7 +41,19 @@ public class RecipesFragment extends Fragment {
         recipeName = (TextView) view.findViewById(R.id.recipeName);
         recipeLevel = (TextView) view.findViewById(R.id.recipeLevel);
         recipeTime = (TextView) view.findViewById(R.id.recipeTime);
-        recipeWeekBtn = (ImageButton) view.findViewById(R.id.recipeWeekBtn);
+        recipeWeekBtn = (ImageView) view.findViewById(R.id.recipeWeekBtn);
+        pastriesBtn = (ImageView) view.findViewById(R.id.pastriesBtn);
+        cakesBtn = (ImageView) view.findViewById(R.id.cakesBtn);
+        breadBtn = (ImageView) view.findViewById(R.id.breadBtn);
+
+        String pastriesLink = "https://firebasestorage.googleapis.com/v0/b/test-87fff.appspot.com/o/pastries.webp?alt=media&token=04c80601-eb0c-4661-8272-f93e3efec22d";
+        Picasso.get().load(pastriesLink).into(pastriesBtn);
+
+        String cakeLink = "https://firebasestorage.googleapis.com/v0/b/test-87fff.appspot.com/o/cake.jpg?alt=media&token=f4fd6f7a-e162-4fee-8b01-a592f940628a";
+        Picasso.get().load(cakeLink).into(cakesBtn);
+
+        String breadLink = "https://firebasestorage.googleapis.com/v0/b/test-87fff.appspot.com/o/bread.jpg?alt=media&token=87963109-08bb-490a-bf52-938f33ce8633";
+        Picasso.get().load(breadLink).into(breadBtn);
 
         RecipeRef = FirebaseDatabase.getInstance().getReference();
 

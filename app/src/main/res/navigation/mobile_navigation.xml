@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/navigation_recipes"
-        android:name="com.example.testproject.ui.recipes.RecipesFragment"
+        android:name="com.example.testproject.ui.RecipesFragment"
         tools:layout="@layout/fragment_recipes" />
         android:label="Time to Bake"
         tools:layout="@layout/fragment_recipes"
@@ -16,56 +16,56 @@
 
     <fragment
         android:id="@+id/navigation_discover"
-        android:name="com.example.testproject.ui.discover.DiscoverFragment"
+        android:name="com.example.testproject.ui.DiscoverFragment"
         tools:layout="@layout/fragment_discover" />
 
     <fragment
         android:id="@+id/navigation_favourites"
-        android:name="com.example.testproject.ui.favourites.FavouritesFragment"
+        android:name="com.example.testproject.ui.FavouritesFragment"
         tools:layout="@layout/fragment_favourites" />
 
     <fragment
         android:id="@+id/navigation_shoppingList"
-        android:name="com.example.testproject.ui.shoppingList.ShoppingListFragment"
+        android:name="com.example.testproject.ui.ShoppingListFragment"
         tools:layout="@layout/fragment_shopping_list" />
 
     <fragment
         android:id="@+id/navigation_community"
-        android:name="com.example.testproject.ui.community.CommunityFragment"
+        android:name="com.example.testproject.ui.CommunityFragment"
         tools:layout="@layout/fragment_community" />
 
     <fragment
         android:id="@+id/navigation_conversionChart"
-        android:name="com.example.testproject.ui.conversionChart.ConversionChartFragment"
+        android:name="com.example.testproject.ui.ConversionChartFragment"
         tools:layout="@layout/fragment_conversion_chart" />
 
     <fragment
         android:id="@+id/navigation_timer"
-        android:name="com.example.testproject.ui.timer.TimerFragment"
+        android:name="com.example.testproject.ui.TimerFragment"
         tools:layout="@layout/fragment_timer" />
 
     <fragment
         android:id="@+id/navigation_pastries"
-        android:name="com.example.testproject.ui.pastries.PastriesFragment"
+        android:name="com.example.testproject.ui.PastriesFragment"
         tools:layout="@layout/fragment_pastries" />
 
     <fragment
         android:id="@+id/navigation_cakes"
-        android:name="com.example.testproject.ui.cakes.CakesFragment"
+        android:name="com.example.testproject.ui.CakesFragment"
         tools:layout="@layout/fragment_cakes" />
 
     <fragment
         android:id="@+id/navigation_display_recipe"
-        android:name="com.example.testproject.ui.displayRecipes.DisplayRecipesFragment"
+        android:name="com.example.testproject.ui.DisplayRecipesFragment"
         tools:layout="@layout/fragment_display_recipe" />
 
     <fragment
         android:id="@+id/navigation_ingredients"
-        android:name="com.example.testproject.ui.ingredients.IngredientsFragment"
+        android:name="com.example.testproject.ui.IngredientsFragment"
         tools:layout="@layout/fragment_ingredients" />
 
     <fragment
         android:id="@+id/navigation_method"
-        android:name="com.example.testproject.ui.method.MethodFragment"
+        android:name="com.example.testproject.ui.MethodFragment"
         tools:layout="@layout/fragment_method" />
 </navigation>

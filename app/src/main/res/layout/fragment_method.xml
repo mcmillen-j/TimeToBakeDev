@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.method.MethodFragment">
+    tools:context=".ui.MethodFragment">
 
     <TextView
         android:id="@+id/text_method"
@@ -35,7 +35,7 @@
         android:id="@+id/startTimerBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="23dp"
+        android:layout_marginTop="10dp"
         android:backgroundTint="@color/blue"
         android:onClick="startTimerClick"
         android:text="Start Timer"
@@ -45,5 +45,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/methodsList"
-        app:layout_constraintVertical_bias="0.022" />
+        app:layout_constraintVertical_bias="0.0" />
 </androidx.constraintlayout.widget.ConstraintLayout>

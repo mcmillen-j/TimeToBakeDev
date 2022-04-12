@@ -1,4 +1,4 @@
-package com.example.testproject.ui.shoppingList;
+package com.example.testproject.ui;
 
 import android.os.Bundle;
 
@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.testproject.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -22,7 +22,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -71,53 +70,37 @@ public class ShoppingListFragment extends Fragment {
 
             @Override
             public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
         listView.setAdapter(arrayAdapter);
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-//        listView.setItemChecked(0, true);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String itemSelected = listView.getItemAtPosition(position).toString();
-                Log.d("PositionNum: ", String.valueOf(position));
                 Log.d("Position: ", itemSelected);
 
                 ShoppingListRef = FirebaseDatabase.getInstance().getReference("ShoppingList");
-
-
-                ShoppingListRef.child(currentUserID)
-                        .orderByChild(ShoppingListRef.getKey())
-                        .equalTo(itemSelected)
+                ShoppingListRef
                         .addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
-                                    String itemKey = childSnapshot.getKey();
-                                    ShoppingListRef.child(currentUserID).child(itemKey).removeValue();
-                                }
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                ShoppingListRef.child(currentUserID).child(itemSelected).removeValue();
+                                Toast.makeText(getContext(), "Ingredient removed from your shopping list", Toast.LENGTH_SHORT).show();
                             }
+
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {
 
                             }
                         });
-
-//                String s = String.valueOf(position);
-//                Log.d("Position", s);
-//                ShoppingListRef = FirebaseDatabase.getInstance().getReference("ShoppingList");
-//                ShoppingListRef.child(currentUserID).child(s).removeValue();
             }
-
         });
-
         return view;
     }
 }

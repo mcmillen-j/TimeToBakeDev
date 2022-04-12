@@ -1,31 +1,22 @@
-package com.example.testproject.ui.ingredients;
+package com.example.testproject.ui;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.testproject.MainActivity;
 import com.example.testproject.R;
-import com.example.testproject.ingredient;
-import com.example.testproject.ingredientAdapter;
-import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -48,16 +39,11 @@ public class IngredientsFragment extends Fragment {
 
     private String currentUserID, currentRecipeName;
 
-//    private RecyclerView recyclerView;
-//    ingredientAdapter adapter; // Create Object of the Adapter class
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_ingredients, container, false);
-
-//        recyclerView = (RecyclerView) ingredientsFragmentView.findViewById(R.id.recyclerView);
 
         mAuth = FirebaseAuth.getInstance();
         currentUserID = mAuth.getCurrentUser().getUid();
@@ -112,7 +98,6 @@ public class IngredientsFragment extends Fragment {
                 Navigation.findNavController(v).navigate(R.id.navigation_conversionChart);
             }
         });
-
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -121,8 +106,7 @@ public class IngredientsFragment extends Fragment {
                         .addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                String pushedId = ShoppingListRef.push().getKey();
-                                ShoppingListRef.child(currentUserID).child(pushedId).setValue(itemSelected);
+                                ShoppingListRef.child(currentUserID).child(itemSelected).setValue(itemSelected);
                                 Toast.makeText(getContext(), "Ingredient added to your shopping list", Toast.LENGTH_SHORT).show();
                             }
 
@@ -133,23 +117,7 @@ public class IngredientsFragment extends Fragment {
                         });
             }
         });
-
         return view;
     }
 
-    // Function to tell the app to start getting
-    // data from database on starting of the activity
-//    @Override public void onStart()
-//    {
-//        super.onStart();
-//        adapter.startListening();
-//    }
-//
-//    // Function to tell the app to stop getting
-//    // data from database on stopping of the activity
-//    @Override public void onStop()
-//    {
-//        super.onStop();
-//        adapter.stopListening();
-//    }
 }

@@ -1,27 +1,14 @@
 package com.example.testproject;
 
-public class recipe {
-
+public class Recipe {
     // Variable to store data corresponding to level keyword in database
     private String recipeName;
-
-    // Variable to store data corresponding to level keyword in database
     private String level;
-
-    // Variable to store data corresponding to level keyword in database
     private String image;
-
-    // Variable to store data corresponding to level keyword in database
     private String time;
-
-    // Variable to store data corresponding to level keyword in database
     private String category;
 
-    // Variable to store data corresponding to level keyword in database
-    private String favourite;
-
-    // Mandatory empty constructor for use of FirebaseUI
-    public recipe() {
+    public Recipe() {
     }
 
     // Getter and setter method
@@ -64,14 +51,6 @@ public class recipe {
 
     public void setCategory(String category) {
         this.category = category;
-    }
-
-    public String getFavourite() {
-        return favourite;
-    }
-
-    public void setFavourite(String favourite) {
-        this.favourite = favourite;
     }
 
 }

@@ -1,38 +1,44 @@
 package com.example.testproject;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
-
+import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
-
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.speech.RecognitionListener;
+import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
-
 import com.example.testproject.databinding.ActivityMainBinding;
+import com.example.testproject.ui.TimerFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-
-import com.example.testproject.ui.favourites.FavouritesFragment;
-
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.navigation.NavController;
@@ -60,9 +66,10 @@ import com.karumi.dexter.listener.single.PermissionListener;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity implements OnInitListener{
+public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
     private static final String TAG = "MainActivity";
@@ -70,24 +77,22 @@ public class MainActivity extends AppCompatActivity implements OnInitListener{
     public DrawerLayout drawerLayout;
     public ActionBarDrawerToggle actionBarDrawerToggle;
 
-
     private Menu menu;
 
     private FirebaseUser currentUser;
     private FirebaseAuth mAuth;
-    private DatabaseReference RootRef;
+    private DatabaseReference RootRef, UsersRef;
 
+    private String currentUserID;
     private String currentRecipeName;
     private String retrieveFavStatus;
-    private String recipeNameToPass, recipeTimeToPass;
+    private String recipeNameToPass, recipeTimeToPass, recipeLevelToPass;
 
-    private int MY_DATA_CHECK_CODE = 0;
-    private TextToSpeech myTTS;
+    private ImageButton speakButton;
+    private EditText inputtedText;
+    private int count = 0;
 
-    String recipeNameValue;
-    String levelValue;
-    String timeValue;
-
+    private SpeechRecognizer speechRecognizer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,19 +105,118 @@ public class MainActivity extends AppCompatActivity implements OnInitListener{
         currentUser = mAuth.getCurrentUser();
         RootRef = FirebaseDatabase.getInstance().getReference();
 
+        speakButton = (ImageButton) findViewById(R.id.micBtn);
+        inputtedText = (EditText) findViewById(R.id.inputText);
 
-        Button speakButton = (Button) findViewById(R.id.speak);
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, 1);
+        }
 
-        Intent checkTTSIntent = new Intent();
-        checkTTSIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
-        startActivityForResult(checkTTSIntent, MY_DATA_CHECK_CODE);
+        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
 
+        final Intent speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+
+        speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE,
+                Locale.getDefault());
         speakButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                EditText enteredText = (EditText)findViewById(R.id.enter);
-                String words = enteredText.getText().toString();
-//                speakWords(words);
+            public void onClick(View v) {
+                if (count == 0) {
+                    speakButton.setImageDrawable(getDrawable(R.drawable.ic_baseline_mic_24));
+                    //start listening
+                    speechRecognizer.startListening(speechRecognizerIntent);
+                    count = 1;
+                } else {
+                    speakButton.setImageDrawable(getDrawable(R.drawable.ic_baseline_mic_off_24));
+                    //stop listening
+                    speechRecognizer.stopListening();
+                    count = 0;
+                }
+            }
+        });
+        speechRecognizer.setRecognitionListener(new RecognitionListener() {
+            @Override
+            public void onReadyForSpeech(Bundle params) {
+
+            }
+
+            @Override
+            public void onBeginningOfSpeech() {
+
+            }
+
+            @Override
+            public void onRmsChanged(float rmsdB) {
+
+            }
+
+            @Override
+            public void onBufferReceived(byte[] buffer) {
+
+            }
+
+            @Override
+            public void onEndOfSpeech() {
+
+            }
+
+            @Override
+            public void onError(int error) {
+                String message;
+                switch (error) {
+                    case SpeechRecognizer.ERROR_AUDIO:
+                        message = "Audio recording error";
+                        break;
+                    case SpeechRecognizer.ERROR_CLIENT:
+                        message = "Client side error";
+                        break;
+                    case SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS:
+                        message = "Insufficient permissions";
+                        break;
+                    case SpeechRecognizer.ERROR_NETWORK:
+                        message = "Network error";
+                        break;
+                    case SpeechRecognizer.ERROR_NETWORK_TIMEOUT:
+                        message = "Network timeout";
+                        break;
+                    case SpeechRecognizer.ERROR_NO_MATCH:
+                        message = "No match";
+                        break;
+                    case SpeechRecognizer.ERROR_RECOGNIZER_BUSY:
+                        message = "RecognitionService busy";
+                        break;
+                    case SpeechRecognizer.ERROR_SERVER:
+                        message = "error from server";
+                        break;
+                    case SpeechRecognizer.ERROR_SPEECH_TIMEOUT:
+                        message = "No speech input";
+                        break;
+                    default:
+                        message = "Didn't understand, please try again.";
+                        break;
+                }
+                Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onResults(Bundle results) {
+                ArrayList<String> data = results.getStringArrayList(speechRecognizer.RESULTS_RECOGNITION);
+                inputtedText.setText(data.get(0));
+                if (data.get(0).equals("send notification")) {
+                    sendNotification();
+                }
+            }
+
+            @Override
+            public void onPartialResults(Bundle partialResults) {
+
+            }
+
+            @Override
+            public void onEvent(int eventType, Bundle params) {
+
             }
         });
 
@@ -127,7 +231,6 @@ public class MainActivity extends AppCompatActivity implements OnInitListener{
         //centre app title in Action bar
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.action_bar_layout);
-
 
         drawerLayout = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.navigation_view);
@@ -149,41 +252,30 @@ public class MainActivity extends AppCompatActivity implements OnInitListener{
         // drawer layout instance to toggle the menu icon to open drawer and back button to close drawer
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.nav_open, R.string.nav_close);
 
-        // pass the Open and Close toggle for the drawer layout listener to toggle the button
+        // pass the open and close toggle for the drawer layout listener to toggle the button
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
 
         // to make the Navigation drawer icon always appear on the action bar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
-//
 //        writeNewRecipe("Macaroons", "Customise and bake your own macaroons by following this easy recipe. Substitute your own flavour or colour to be how you want.", "R.drawable.macaroons", "Pastries",
-//        "30m", "Beginner", "1.Separate egg whites", "No", "Yes");
+//        "30m", "Beginner",  "No");
 //        writeNewRecipe("Vegan Angel Cake", "Colourful", "src/main/res/drawable-hdpi/angel_cake.png", "Cakes",
-//                "1h30m", "Intermediate", "1.Mix together ingredients", "No", "No");
-
+//                "1h30m", "Intermediate", "Yes");
     }
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-//        DatabaseReference recipeName = database.getReference("recipeName");
-        DatabaseReference mDatabase = database.getReference();
-        DatabaseReference recipeName = mDatabase.child("recipes").child("1").child("recipeName");
-        DatabaseReference level = mDatabase.child("recipes").child("1").child("level");
-        DatabaseReference time = mDatabase.child("recipes").child("1").child("time");
-
-        //Read from the database
-        recipeName.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                recipeNameValue = dataSnapshot.getValue(String.class);
-                Log.d(TAG, "Value is: " + recipeNameValue);
-//                TextView textView = findViewById(R.id.recipeName);
-//                textView.setText(recipeNameValue);
+    @SuppressLint("MissingSuperCall")
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == 1) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show();
             }
-
+        }
+    }
 
     @Override
     protected void onStart() {
@@ -195,11 +287,11 @@ public class MainActivity extends AppCompatActivity implements OnInitListener{
         }
     }
 
+
     private void VerifyUserExistence() {
-        String currentUserID = mAuth.getCurrentUser().getUid();
+        currentUserID = mAuth.getCurrentUser().getUid();
         RootRef.child("Users").child(currentUserID).addValueEventListener(new ValueEventListener() {
             @Override
-
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if ((dataSnapshot.child("firstname").exists())) {
                     String retrieveFirstName = dataSnapshot.child("firstname").getValue().toString();
@@ -207,39 +299,6 @@ public class MainActivity extends AppCompatActivity implements OnInitListener{
                 } else {
                     SendUserToAccountActivity();
                 }
-
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                Log.w(TAG, "Failed to read value.", error.toException());
-            }
-        });
-        level.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                String levelValue = dataSnapshot.getValue(String.class);
-                Log.d(TAG, "Value is: " + levelValue);
-//                TextView textView = findViewById(R.id.level);
-//                textView.setText(levelValue);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                Log.w(TAG, "Failed to read value.", error.toException());
-            }
-        });
-        time.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                String timeValue = dataSnapshot.getValue(String.class);
-                Log.d(TAG, "Value is: " + timeValue);
-//                TextView textView = findViewById(R.id.time);
-//                textView.setText(timeValue);
-
             }
 
             @Override
@@ -267,7 +326,6 @@ public class MainActivity extends AppCompatActivity implements OnInitListener{
                                String time, String level, String recipeOfWeek) {
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-//        DatabaseReference recipeName = database.getReference("name");
         DatabaseReference mDatabase = database.getReference();
         mDatabase.child("Recipes").child(name).child("recipeName").setValue(name);
         mDatabase.child("Recipes").child(name).child("description").setValue(description);
@@ -298,6 +356,7 @@ public class MainActivity extends AppCompatActivity implements OnInitListener{
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
                                 Log.d(TAG, "User account deleted.");
+                                Toast.makeText(MainActivity.this, "Your account has been deleted.", Toast.LENGTH_SHORT).show();
                             } else {
                                 String message = task.getException().toString();
                                 Toast.makeText(MainActivity.this, "Error: " + message, Toast.LENGTH_SHORT).show();
@@ -313,17 +372,6 @@ public class MainActivity extends AppCompatActivity implements OnInitListener{
 
         return super.onOptionsItemSelected(item);
     }
-
-
-//    public String getRecipeName() {
-//        return currentRecipeName;
-//    }
-
-    public String getRecipeName() {
-
-        return recipeName;
-    }
-
 
     public void fbClick(View view) {
         startActivity(getOpenFacebookIntent());
@@ -351,41 +399,6 @@ public class MainActivity extends AppCompatActivity implements OnInitListener{
         currentRecipeName = recipeNameClicked;
     }
 
-    public void updateFavouriteClick(String recipeNameRetrieved) {
-        Toast.makeText(this, "Clicked", Toast.LENGTH_SHORT).show();
-
-        RootRef.child("Recipes").child(recipeNameRetrieved)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        retrieveFavStatus = dataSnapshot.child("favourite").getValue().toString();
-                        if (retrieveFavStatus.contentEquals("Yes")) {
-                            RootRef.child("Recipes").child(recipeNameRetrieved).child("favourite").setValue("No");
-                        } if (retrieveFavStatus.contentEquals("No")) {
-                            RootRef.child("Recipes").child(recipeNameRetrieved).child("favourite").setValue("Yes");
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-    }
-
-
-        return recipeNameValue;
-    }
-    public String getRecipeLevel() {
-        return levelValue;
-    }
-    public String getRecipeTime() {
-        return timeValue;
-    }
-
-    public void fbClick(View view) {
-        startActivity(getOpenFacebookIntent());
-    }
     public Intent getOpenFacebookIntent() {
         try {
             getPackageManager().getPackageInfo("com.facebook.katana", 0);
@@ -451,40 +464,6 @@ public class MainActivity extends AppCompatActivity implements OnInitListener{
         notificationManager.notify(1, builder.build());
     }
 
-    @Override
-    public void onInit(int initStatus) {
-
-        //check for successful instantiation
-        if (initStatus == TextToSpeech.SUCCESS) {
-            myTTS.setLanguage(Locale.US);
-            myTTS.speak("Hello World", TextToSpeech.QUEUE_FLUSH, null);
-
-//            if(myTTS.isLanguageAvailable(Locale.US)==TextToSpeech.LANG_AVAILABLE)
-//                myTTS.setLanguage(Locale.US);
-        }
-        else if (initStatus == TextToSpeech.ERROR) {
-            Toast.makeText(this, "Sorry! Text To Speech failed...", Toast.LENGTH_LONG).show();
-        }
-    }
-
-//    private void speakWords(String speech) {
-//        myTTS.speak(speech, TextToSpeech.QUEUE_FLUSH, null);
-//    }
-
-
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == MY_DATA_CHECK_CODE) {
-            if (resultCode == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
-                myTTS = new TextToSpeech(this, this);
-            } else {
-                Intent installTTSIntent = new Intent();
-                installTTSIntent.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
-                startActivity(installTTSIntent);
-            }
-        }
-    }
-
     public void setRecipeNameToDisplay(String recipeName) {
         recipeNameToPass = recipeName;
         Log.d("RecipeNameReceived: ", recipeName);
@@ -499,14 +478,47 @@ public class MainActivity extends AppCompatActivity implements OnInitListener{
         Log.d("RecipeTimeReceived: ", recipeTime);
     }
 
+    public void setLevelSelected(String recipeLevel) {
+        recipeLevelToPass = recipeLevel;
+        Log.d("RecipeLevelReceived: ", recipeLevel);
+    }
+
     public String getRecipeTimeToDisplay() {
         return recipeTimeToPass;
     }
+
+    public String getRecipeLevelToDisplay() {
+        return recipeLevelToPass;
+    }
+
+    public void updateFavouriteClick(View view, String recipeNameClicked) {
+        currentUserID = mAuth.getCurrentUser().getUid();
+        RootRef.child("Favourites").child(currentUserID).child(recipeNameClicked)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        retrieveFavStatus = dataSnapshot.child("Favourite").getValue().toString();
+                        if (retrieveFavStatus.contentEquals("Yes")) {
+                            RootRef.child("Favourites").child(currentUserID).child(recipeNameClicked).child("Favourite").setValue("No");
+                            Toast.makeText(MainActivity.this, "Recipe removed from favourites.", Toast.LENGTH_SHORT).show();
+                        }
+                        if (retrieveFavStatus.contentEquals("No")) {
+                            RootRef.child("Favourites").child(currentUserID).child(recipeNameClicked).child("Favourite").setValue("Yes");
+                            Toast.makeText(MainActivity.this, "Recipe added to favourites.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+    }
+
 
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
     }
-
 }

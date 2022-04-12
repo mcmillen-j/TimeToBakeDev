@@ -26,10 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 public class AdminActivity extends AppCompatActivity {
 
     private Button AddRecipeButton, LogOutButton;
-    private EditText UserEmail, UserPassword;
-    private TextView AlreadyHaveAccountLink;
 
-    private FirebaseAuth mAuth;
     private DatabaseReference RootRef;
 
     private ProgressDialog loadingBar;
@@ -38,8 +35,6 @@ public class AdminActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin);
-
-        mAuth = FirebaseAuth.getInstance();
 
         RootRef = FirebaseDatabase.getInstance().getReference();
 
@@ -55,54 +50,21 @@ public class AdminActivity extends AppCompatActivity {
         AddRecipeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CreateNewAccount();
+                CreateNewRecipe();
             }
         });
+
+        SendNotification();
     }
 
-    private void CreateNewAccount() {
-        String email = UserEmail.getText().toString();
-        String password = UserPassword.getText().toString();
-
-        if (TextUtils.isEmpty(email)) {
-            Toast.makeText(this, "Please enter your email address", Toast.LENGTH_SHORT).show();
-        }
-        if (TextUtils.isEmpty(password)) {
-            Toast.makeText(this, "Please enter a password", Toast.LENGTH_SHORT).show();
-        }
-        else  {
-            loadingBar.setTitle("Creating new account");
-            loadingBar.setMessage("Please wait while we are creating new account for you");
-            loadingBar.setCanceledOnTouchOutside(true);
-            loadingBar.show();
-
-            mAuth.createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                String currentUserID = mAuth.getCurrentUser().getUid();
-                                RootRef.child("Users").child(currentUserID).setValue("");
-                                SendUserToLoginActivity();
-                                SendNotification();
-                                Toast.makeText(AdminActivity.this, "Recipe added successfully",Toast.LENGTH_SHORT).show();
-                                loadingBar.dismiss();
-                            } else {
-                                String message = task.getException().toString();
-                                Toast.makeText(AdminActivity.this, "Error: " + message, Toast.LENGTH_SHORT).show();
-                                loadingBar.dismiss();
-                            }
-                        }
-                    });
-        }
+    private void CreateNewRecipe() {
+        SendNotification();
+        SendUserToLoginActivity();
     }
 
     private void InitializeFields() {
         AddRecipeButton = (Button) findViewById(R.id.addRecipeButton);
         LogOutButton = (Button) findViewById(R.id.logOutButton);
-        UserEmail = (EditText) findViewById(R.id.registerEmail);
-        UserPassword = (EditText) findViewById(R.id.registerPassword);
-        AlreadyHaveAccountLink = (TextView) findViewById(R.id.alreadyHaveAccountLink);
         loadingBar = new ProgressDialog(this);
     }
 

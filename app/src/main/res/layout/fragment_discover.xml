@@ -3,63 +3,78 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:layout_editor_absoluteX="0dp"
-    tools:layout_editor_absoluteY="0dp"
+    android:fillViewport="true"
     android:scrollbarAlwaysDrawVerticalTrack="true"
     android:scrollbarDefaultDelayBeforeFade="400"
     android:scrollbarFadeDuration="400"
     android:scrollbars="vertical"
-    android:fillViewport="true">
+    tools:layout_editor_absoluteX="0dp"
+    tools:layout_editor_absoluteY="0dp">
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_weight="1"
         android:layout_gravity="fill"
+        android:layout_weight="1"
         android:orientation="vertical"
-        tools:context=".ui.discover.DiscoverFragment">
+        tools:context=".ui.DiscoverFragment">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        tools:context=".ui.discover.DiscoverFragment">
-
-        <EditText
-            android:id="@+id/searchText"
-            android:layout_width="353dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="20dp"
-            android:ems="10"
-            android:gravity="left"
-            android:hint="Search app"
-            android:inputType="textAutoComplete"
-            android:src="@drawable/ic_baseline_search_24"
-            android:textColor="#183C79"
-            android:textColorHint="#183C79" />
-
-        <ImageButton
-            android:id="@+id/searchBtn"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="#0000"
-            android:layout_marginTop="20dp"
-            android:src="@drawable/ic_baseline_search_24"
-            android:gravity="right" />
+            android:orientation="horizontal"
+            tools:context=".ui.DiscoverFragment">
 
-    </LinearLayout>
+            <EditText
+                android:id="@+id/searchText"
+                android:layout_width="353dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="20dp"
+                android:ems="10"
+                android:gravity="left"
+                android:hint="Search app"
+                android:inputType="textAutoComplete"
+                android:src="@drawable/ic_baseline_search_24"
+                android:textColor="#183C79"
+                android:textColorHint="#183C79" />
 
+            <ImageButton
+                android:id="@+id/searchBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="#0000"
+                android:gravity="right"
+                android:src="@drawable/ic_baseline_search_24" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            tools:context=".ui.DiscoverFragment">
+
+            <TextView
+                android:id="@+id/errorTxt"
+                android:layout_width="181dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:textColor="@color/red" />
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/textView6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
             android:layout_marginTop="20dp"
             android:text="Find baking classes near you"
             android:textSize="20sp"
-            android:textStyle="bold"
-            android:layout_marginLeft="10dp" />
+            android:textStyle="bold" />
 
         <WebView
             android:id="@+id/webView"
@@ -72,27 +87,27 @@
             android:id="@+id/mapView"
             android:layout_width="match_parent"
             android:layout_height="300dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginLeft="10dp" />
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp" />
 
         <TextView
             android:id="@+id/textView8"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:textStyle="bold"
-            android:textSize="16sp"
             android:layout_marginLeft="10dp"
-            android:text="Not know where to start?" />
+            android:layout_marginTop="20dp"
+            android:text="Not know where to start?"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/textView9"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:layout_marginLeft="10dp"
-            android:textSize="14sp"
-            android:text="Watch the video below to get to grips with everything you need to get started." />
+            android:layout_marginTop="10dp"
+            android:text="Watch the video below to get to grips with everything you need to get started."
+            android:textSize="14sp" />
 
         <VideoView
             android:id="@+id/videoView"
@@ -100,8 +115,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="20dp"/>
+            android:layout_marginBottom="20dp" />
 
     </LinearLayout>
 
-    </ScrollView>
+</ScrollView>

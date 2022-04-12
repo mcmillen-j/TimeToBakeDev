@@ -13,41 +13,11 @@
     tools:openDrawer="start"
     app:itemIconTint="@color/blue" >
 
-
-<!--    <LinearLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent">-->
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="?attr/actionBarSize" >
-
-        android:paddingTop="?attr/actionBarSize">
-
-        <EditText
-            android:id="@+id/enter"
-            android:layout_width="207dp"
-            android:layout_height="66dp"
-            android:layout_marginEnd="21dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/speak"
-            app:layout_constraintHorizontal_bias="0.622"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/nav_host_fragment_activity_main"
-            app:layout_constraintVertical_bias="0.885" />
-
-        <Button
-            android:id="@+id/speak"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="36dp"
-            android:text="Speak"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.872" />
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav_view"
@@ -83,16 +53,6 @@
             app:navGraph="@navigation/mobile_navigation" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-<!--    </LinearLayout>-->
-
-<!--    <com.google.android.material.navigation.NavigationView-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:id="@+id/navigation_view"-->
-<!--        android:layout_gravity="start"-->
-<!--        app:menu="@menu/bottom_nav_menu" />-->
 
 
     <!--ArcNavigationView Element-->

@@ -4,11 +4,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -18,7 +20,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -57,6 +58,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 AllowUserToLogin();
+                CloseKeyboard();
             }
         });
     }
@@ -104,6 +106,7 @@ public class LoginActivity extends AppCompatActivity {
         String emailAddress = UserEmail.getText().toString();
 
         if (TextUtils.isEmpty(emailAddress)) {
+            CloseKeyboard();
             UserEmail.requestFocus();
             Toast.makeText(this, "Please enter your email address", Toast.LENGTH_SHORT).show();
         } else {
@@ -112,6 +115,7 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
+                                CloseKeyboard();
                                 Log.d(TAG, "Email sent.");
                             } else {
                                 String message = task.getException().toString();
@@ -149,5 +153,13 @@ public class LoginActivity extends AppCompatActivity {
     private void SendUserToRegisterActivity() {
         Intent registerIntent = new Intent(LoginActivity.this, RegisterActivity.class);
         startActivity(registerIntent);
+    }
+
+    public void CloseKeyboard() {
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 }
