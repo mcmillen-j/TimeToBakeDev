@@ -73,7 +73,7 @@ public class FavouritesFragment extends Fragment {
 
         MainActivity activity = (MainActivity) getActivity();
 
-        String array[] = {"Vegan Angel Cake", "Macaroons"};
+        String array[] = {"Vegan Angel Cake", "Macaroons", "Chocolate Cake", "Danish Pastries"};
 
         for (int i = 0; i < array.length; i++) {
 
@@ -88,21 +88,12 @@ public class FavouritesFragment extends Fragment {
                                 activity.setRecipeNameToDisplay(recipeNameToDisplay);
 
                                 // Connecting Adapter class with the Recycler view*/
-//                            recyclerView.setAdapter(adapter);
+                                recyclerView.setAdapter(adapter);
                             } else {
-                                recipeNameToDisplay = "Not a favourite";
-                                activity.setRecipeNameToDisplay(recipeNameToDisplay);
-
+                                activity.setRecipeNameToDisplay("No favourites");
+                                // Connecting Adapter class with the Recycler view*/
+                                recyclerView.setAdapter(adapter);
                             }
-//                            String favValue2 = dataSnapshot.child("Vegan Angel Cake").child("Favourite").getValue().toString();
-//                            if (favValue2.contentEquals("Yes")) {
-//                                recipeNameToDisplay = "Vegan Angel Cake";
-//                                activity.setRecipeNameToDisplay(recipeNameToDisplay);
-//
-//                                // Connecting Adapter class with the Recycler view*/
-////                            recyclerView.setAdapter(adapter);
-//                            }
-
                         }
 
                         @Override
@@ -111,25 +102,6 @@ public class FavouritesFragment extends Fragment {
                         }
                     });
         }
-//        FavouriteRef.child(currentUserID).child("Vegan Angel Cake")
-//                .addValueEventListener(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                        String favValue = dataSnapshot.child("Favourite").getValue().toString();
-//                        if (favValue.contentEquals("Yes")) {
-//                            recipeNameToDisplay = "Vegan Angel Cake";
-//                            activity.setRecipeNameToDisplay(recipeNameToDisplay);
-//
-//                            // Connecting Adapter class with the Recycler view*/
-//                            recyclerView.setAdapter(adapter);
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError error) {
-//
-//                    }
-//                });
 
         activity.setRecipeNameToDisplay(recipeNameToDisplay);
 
